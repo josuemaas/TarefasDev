@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Previsão do Tempo</title>
+</head>
+<body>
+    <h2>Previsão do Tempo</h2>
+    <button onclick="getLocation()">Obter Previsão</button>
+    <div id="weather"></div>
+
+    <script>
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(success, error);
+            } else {
+                document.getElementById("weather").innerHTML = "<p>Geolocalização não suportada pelo seu navegador.</p>";
+            }
+        }
+
+        function success(position) {
+            let latitude = position.coords.latitude;
+            let longitude = position.coords.longitude;
+
+            fetch(`clima.php?lat=${latitude}&lon=${longitude}`)
+                .then(response => response.text())
+                .then(data => document.getElementById("weather").innerHTML = data)
+                .catch(err => document.getElementById("weather").innerHTML = "<p>Erro ao obter os dados.</p>");
+        }
+
+        function error() {
+            document.getElementById("weather").innerHTML = "<p>Permissão negada ou erro ao obter localização.</p>";
+        }
+    </script>
+</body>
+</html>
